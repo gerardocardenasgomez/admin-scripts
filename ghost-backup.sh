@@ -1,41 +1,39 @@
 #!/bin/bash
 # Author: Gerardo Cardenas-Gomez
-# Version 0.0.1
-# Future plans: Clean up the spacer stuff
-#               Add functions instead
+# Version 0.0.2
+# Future plans: Spacer stuff no necessary
+#               Appending to TEMPFILE commands still look ugly
 #
 TEMPFILE=$(mktemp)                              # Create the file that will be emailed
+NOTIFIERFILE=/var/lib/update-notifier/updates-available
+
 hostname=$(hostname)                            # So digging for the correct host isn't necessary
 username=username                               # Make it easy to scrub sensitive data
 email=email                                     # Make it easy to scrub sensitive data
-spacer="================="
 
 date=$(date +"%Y%m%d")                          # Year-Month-Day format
 rand=$(echo -$RANDOM)                           # To help prevent duplicate files
 filename=/home/$username/BACKUPS/backup$date$rand.tar.gz
 
-echo "Logged in:"
+echo -e "\nLogged in:" >> $TEMPFILE
 who >> $TEMPFILE
-echo "$spacer" >> $TEMPFILE
-echo "last output:"
+echo -e "\nlast output:" >> $TEMPFILE
 last >> $TEMPFILE
-echo "$spacer" >> $TEMPFILE
 
+echo -e "\nUpdate information:" >> $TEMPFILE
                                                 # Print update info from Ubuntu motd
-if [ -e "/var/lib/update-notifier/updates-available" ]; then
-    cat /var/lib/update-notifier/updates-available >> $TEMPFILE
-else
-    echo "No updates available, yay!" >> $TEMPFILE
+if [ -e $NOTIFIERFILE ]; then
+    FSIZE=$(stat --printf="%s" $NOTIFIERFILE)   # Notifier file is empty if there are no updates
+    if [ $FSIZE -gt 1 ]; then
+        cat $NOTIFIERFILE >> $TEMPFILE
+    else
+        echo "There are no new updates available!" >> $TEMPFILE
+   fi
 fi
-echo "$spacer" >> $TEMPFILE
 
-echo "BACKUP INFORMATION" >> $TEMPFILE
-echo "$spacer" >> $TEMPFILE
-echo "$spacer" >> $TEMPFILE
-echo "$spacer" >> $TEMPFILE
-
+echo -e "\nBACKUP INFORMATION" >> $TEMPFILE
                                                 # Errors get appended to $TEMPFILE
-tar -cvpzf $filename /var/www/ 2>> $TEMPFILE
+tar -cvpzf $filename /var/www 2>> $TEMPFILE
 exitcode=$?
 
 if [ $exitcode = "0" ]; then
