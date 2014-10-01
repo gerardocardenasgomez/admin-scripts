@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Gerardo Cardenas-Gomez
-# Version 0.0.2
-# Future plans: Spacer stuff no necessary
+# Version 0.0.3
+# Future plans: Added automatic uploading to Amazon S3
 #               Appending to TEMPFILE commands still look ugly
 #
 TEMPFILE=$(mktemp)                              # Create the file that will be emailed
@@ -14,6 +14,9 @@ email=email                                     # Make it easy to scrub sensitiv
 date=$(date +"%Y%m%d")                          # Year-Month-Day format
 rand=$(echo -$RANDOM)                           # To help prevent duplicate files
 filename=/home/$username/BACKUPS/backup$date$rand.tar.gz
+
+bucketname=bucketname                           # Amazon S3 bucket, sanitized
+bucketfolder=bucketfolder                       # Amazon S3 folder in bucket, sanitized
 
 echo -e "\nLogged in:" >> $TEMPFILE
 who >> $TEMPFILE
@@ -38,6 +41,9 @@ exitcode=$?
 
 if [ $exitcode = "0" ]; then
     chmod 400 $filename                         # Backup file contains sensitive data!
+
+    echo -e "\nAWS S3 uploader" >> $TEMPFILE
+    aws s3 cp $filename s3://$bucketname/$bucketfolder 2>> $TEMPFILE 
 
     echo "Successful backup from $hostname!" >> $TEMPFILE
     mail -s "Backup: $hostname on $date" $email  < $TEMPFILE
