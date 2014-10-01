@@ -4,19 +4,27 @@
 # Future plans: Added automatic uploading to Amazon S3
 #               Appending to TEMPFILE commands still look ugly
 #
+#
+# Sanitize this section!
+#
+username=username                               # Make it easy to scrub sensitive data
+email=email                                     # Make it easy to scrub sensitive data
+bucketname=bucketname                           # Amazon S3 bucket, sanitized
+bucketfolder=bucketfolder                       # Amazon S3 folder in bucket, sanitized
+#
+# Sanitize this section!
+#
+
 TEMPFILE=$(mktemp)                              # Create the file that will be emailed
 NOTIFIERFILE=/var/lib/update-notifier/updates-available
 
 hostname=$(hostname)                            # So digging for the correct host isn't necessary
-username=username                               # Make it easy to scrub sensitive data
-email=email                                     # Make it easy to scrub sensitive data
+
 
 date=$(date +"%Y%m%d")                          # Year-Month-Day format
 rand=$(echo -$RANDOM)                           # To help prevent duplicate files
 filename=/home/$username/BACKUPS/backup$date$rand.tar.gz
 
-bucketname=bucketname                           # Amazon S3 bucket, sanitized
-bucketfolder=bucketfolder                       # Amazon S3 folder in bucket, sanitized
 
 echo -e "\nLogged in:" >> $TEMPFILE
 who >> $TEMPFILE
