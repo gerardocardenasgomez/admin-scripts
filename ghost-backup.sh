@@ -51,7 +51,7 @@ if [ $exitcode = "0" ]; then
     chmod 400 $filename                         # Backup file contains sensitive data!
 
     echo -e "\nAWS S3 uploader" >> $TEMPFILE
-    aws s3 cp $filename s3://$bucketname/$bucketfolder 2>> $TEMPFILE 
+    aws s3 cp $filename s3://$bucketname/$bucketfolder/ 2>> $TEMPFILE 
 
     echo "Successful backup from $hostname!" >> $TEMPFILE
     mail -s "Backup: $hostname on $date" $email  < $TEMPFILE
