@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Currently for yum only
+
 
 import platform
 import rpm
