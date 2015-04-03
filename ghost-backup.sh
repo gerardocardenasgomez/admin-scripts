@@ -32,15 +32,14 @@ echo -e "\nlast output:" >> $TEMPFILE
 last >> $TEMPFILE
 
 echo -e "\nUpdate information:" >> $TEMPFILE
-                                                # Print update info from Ubuntu motd
-if [ -e $NOTIFIERFILE ]; then
-    FSIZE=$(stat --printf="%s" $NOTIFIERFILE)   # Notifier file is empty if there are no updates
-    if [ $FSIZE -gt 1 ]; then
-        cat $NOTIFIERFILE >> $TEMPFILE
-    else
-        echo "There are no new updates available!" >> $TEMPFILE
-   fi
-fi
+
+                                                # Print info about regular and security updates
+APT_UPDATES=$(/usr/lib/update-notifier/apt-check 2>&1)
+REG_UPDATES=$(cut -d ';' -f 1 <<< $APT_UPDATES)
+SEC_UPDATES=$(cut -d ';' -f 2 <<< $APT_UPDATES)
+
+echo -e "\nThere are $REG_UPDATES regular updates available." >> $TEMPFILE
+echo -e "\nThere are $SEC_UPDATES security updates available." >> $TEMPFILE
 
 echo -e "\nBACKUP INFORMATION" >> $TEMPFILE
                                                 # Errors get appended to $TEMPFILE
