@@ -1,0 +1,11 @@
+| [[Redirection]] | [[LPIC-101]] | [[Performance Monitoring]] |
+^  Programming  ^^^^
+| [[BASH Scripting]] | [[Python]] | [[Ruby]] | [[Perl]] | 
+| [[BASH Parameters]] | [[RRDTool]] | [[Script Examples]] | [[Perl Examples]] | 
+[[R (Language)]]\\
+[[R Scripts]]\\
+[[Node(Chef)]]\\
+wiki.LearningUnix.org
+[[Things((Chef))]]\\
+----
+Salt And Google Compute Cloud:\\
