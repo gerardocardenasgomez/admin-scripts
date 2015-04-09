@@ -19,7 +19,7 @@ foreach $file (@ARGV) {
     # Search for the FIXME string
     while (<FILE>) {
         if ($_ =~ /FIXME.*\(/) {
-            $file =~ s/.txt/$1/;
+            $file =~ s/\.txt//;
             $_.chomp();
             push @FIXES, "[[$file]] -> $_\\\\"; 
         }
