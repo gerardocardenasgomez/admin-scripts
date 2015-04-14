@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pymongo
-
+import datetime
 from pymongo import MongoClient
 
 
@@ -10,9 +10,16 @@ connection = MongoClient('localhost', 27017)
 db = connection.test
 
 # handle to names collection
-names = db.names
+pydata = db.data
 
-item = names.find_one({"name":"Tom"})
+try:
+    commit_data = pydata.find_one({"name": "user"})
+    if not commit_data:
+        raise exception
+except:
+    print "had to add data!"
+    pydata.insert({"name": "user", "commitMessage": "Add variables to the file db.py", "createdAt": datetime.datetime.utcnow()})
+    commit_data = pydata.find_one({"name": "user"})
 
-print item['name']
-print item['age']
+print commit_data["name"]
+print commit_data["commitMessage"]
