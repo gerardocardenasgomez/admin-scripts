@@ -67,4 +67,4 @@ def overview():
     return output_text 
 
 if __name__ == '__main__': 
-    app.run(host='100.78.122.25', port=8080, debug=True)
+    app.run(host='localhost', port=8080, debug=True)
