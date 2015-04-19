@@ -16,7 +16,6 @@ bucketfolder=bucketfolder                       # Amazon S3 folder in bucket, sa
 #
 
 TEMPFILE=$(mktemp)                              # Create the file that will be emailed
-NOTIFIERFILE=/var/lib/update-notifier/updates-available
 
 hostname=$(hostname)                            # So digging for the correct host isn't necessary
 
