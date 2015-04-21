@@ -1,8 +1,27 @@
+from kivy.factory import Factory
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivy.network.urlrequest import UrlRequest
+from kivy.uix.listview import ListItemButton
 import re
+
+class LocationButton(ListItemButton):
+    pass
+
+class WeatherRoot(BoxLayout):
+    def show_current_weather(self, location):
+        self.clear_widgets()
+        
+        current_weather = Factory.CurrentWeather()
+        current_weather.location = location
+        current_weather.day_of_week = "tuesday"
+
+        self.add_widget(current_weather)
+
+    def show_add_location_form(self):
+        self.clear_widgets()
+        self.add_widget(AddLocationForm())
 
 class AddLocationForm(BoxLayout):
     search_input = ObjectProperty()
@@ -27,7 +46,16 @@ class AddLocationForm(BoxLayout):
         cities = ["{0} ({1})".format(d['name'], d['sys']['country']) for d in data['list']]
 
         if cities:
-            self.search_results.item_strings = cities        
+            self.search_results.item_strings = cities
+
+            # The clear() feature is for Python3        
+            #self.search_results.adapter.data.clear()
+            # using del instead
+
+            del self.search_results.adapter.data[:]
+
+            self.search_results.adapter.data.extend(cities)
+            self.search_results._trigger_reset_populate()
         else:
             self.search_results.item_strings = ["No cities found!"]
 
