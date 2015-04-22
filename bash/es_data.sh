@@ -15,7 +15,7 @@ print_results () {
     exit_code=$1
     return_string=$2
 
-    if [ "$exit_code" -eq 0 ]; then
+    if [[ "$exit_code" -eq 0 ]]; then
         echo "$return_string"
     else
         echo "Error! Exit code: $exit_code"
@@ -26,7 +26,7 @@ print_results () {
 #
 # format is: ./es_put.sh PUT /megacorp/employee 99 data.txt
 #                        $1           $2        $3   $4
-if [ "$action" == "PUT" ]; then
+if [[ "$action" == "PUT" ]]; then
     url=$2
     id=$3
     file=$4
@@ -40,7 +40,7 @@ fi
 #
 # format is: ./es_put.sh GET /megacorp/employee _search last_name:Smith
 #                         $1          $2           $3         $4
-if [ "$action" == "GET" ]; then
+if [[ "$action" == "GET" ]]; then
     url=$2
     query_type=$3
     query_string=$4
@@ -50,7 +50,7 @@ if [ "$action" == "GET" ]; then
     # If $query_string is empty, allow for /megacorp/employee/_search type queries
     # Otherwise, append the ?q= string for GET method 
     #
-    if [ "$query_string" != "" ]; then
+    if [[ "$query_string" != "" ]]; then
         query_type=$query_type$get_request_string
     fi
 
