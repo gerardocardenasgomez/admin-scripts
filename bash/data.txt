@@ -1,0 +1,7 @@
+{
+    "first_name" : "Jane",
+    "last_name" :  "Austen",
+    "age" :        25,
+    "about" :      "Books are great",
+    "interests": [ "books", "beer" ]
+}
