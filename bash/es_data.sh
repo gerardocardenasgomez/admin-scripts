@@ -3,7 +3,7 @@
 # TODO: Make the query function more not awful
 
 action=$1
-server='localhost'
+server='10.132.219.64'
 port='9200'
 
 server_addr="$server:$port"
@@ -24,12 +24,32 @@ print_results () {
 }
 
 #
+# format is: ./es_data BACKUP /_snapshot/name data.txt
+#
+
+if [[ "$action" == "BACKUP" ]]; then
+    url=$2
+    file=$3
+
+    es_string=$(curl -s -XPUT "$server_addr/$url" -d @"$file")
+    exit_code=$?
+
+    print_results "$exit_code" "$es_string"
+fi
+
+#
 # format is: ./es_put.sh PUT /megacorp/employee 99 data.txt
 #                        $1           $2        $3   $4
 if [[ "$action" == "PUT" ]]; then
-    url=$2
-    id=$3
-    file=$4
+    if [[ $3 =~ ^-?[0-9]+$ ]]; then
+        url=$2
+        id=$3
+        file=$4
+    else
+        url=$2
+        file=$3
+        id=''
+    fi
 
     es_string=$(curl -s -XPUT "$server_addr/$url/$id" -d @"$file")
     exit_code=$?
@@ -51,10 +71,10 @@ if [[ "$action" == "GET" ]]; then
     # Otherwise, append the ?q= string for GET method 
     #
     if [[ "$query_string" != "" ]]; then
-        query_type=$query_type$get_request_string
+        query_type="/$query_type$get_request_string"
     fi
 
-    es_string=$(curl -s XGET "$server_addr/$url/$query_type$query_string")
+    es_string=$(curl -s XGET "$server_addr/$url$query_type$query_string")
     exit_code=$?
 
     print_results "$exit_code" "$es_string"
