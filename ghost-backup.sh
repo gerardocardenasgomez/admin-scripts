@@ -2,7 +2,7 @@
 # Author: Gerardo Cardenas-Gomez
 # Version 0.0.3
 # Future plans: Added automatic uploading to Amazon S3
-#               Appending to TEMPFILE commands still look ugly
+#               Appending to tempfile commands still look ugly
 #
 #
 # Sanitize this section!
@@ -15,7 +15,7 @@ bucketfolder=bucketfolder                       # Amazon S3 folder in bucket, sa
 # Sanitize this section!
 #
 
-TEMPFILE=$(mktemp)                              # Create the file that will be emailed
+tempfile=$(mktemp)                              # Create the file that will be emailed
 
 hostname=$(hostname)                            # So digging for the correct host isn't necessary
 
@@ -25,35 +25,35 @@ rand=$(echo -$RANDOM)                           # To help prevent duplicate file
 filename=/home/$username/BACKUPS/backup$date$rand.tar.gz
 
 
-echo -e "\nLogged in:" >> $TEMPFILE
-who >> $TEMPFILE
-echo -e "\nlast output:" >> $TEMPFILE
-last >> $TEMPFILE
+echo -e "\nLogged in:" >> $tempfile
+who >> $tempfile
+echo -e "\nlast output:" >> $tempfile
+last >> $tempfile
 
-echo -e "\nUpdate information:" >> $TEMPFILE
+echo -e "\nUpdate information:" >> $tempfile
 
                                                 # Print info about regular and security updates
-APT_UPDATES=$(/usr/lib/update-notifier/apt-check 2>&1)
-REG_UPDATES=$(cut -d ';' -f 1 <<< $APT_UPDATES)
-SEC_UPDATES=$(cut -d ';' -f 2 <<< $APT_UPDATES)
+apt_updates=$(/usr/lib/update-notifier/apt-check 2>&1)
+reg_updates=$(cut -d ';' -f 1 <<< $apt_updates)
+sec_updates=$(cut -d ';' -f 2 <<< $apt_updates)
 
-echo -e "\nThere are $REG_UPDATES regular updates available." >> $TEMPFILE
-echo -e "\nThere are $SEC_UPDATES security updates available." >> $TEMPFILE
+echo -e "\nThere are $reg_updates regular updates available." >> $tempfile
+echo -e "\nThere are $sec_updates security updates available." >> $tempfile
 
-echo -e "\nBACKUP INFORMATION" >> $TEMPFILE
-                                                # Errors get appended to $TEMPFILE
-tar -cvpzf $filename /var/www 2>> $TEMPFILE
+echo -e "\nBACKUP INFORMATION" >> $tempfile
+                                                # Errors get appended to $tempfile
+tar -cvpzf $filename /var/www 2>> $tempfile
 exitcode=$?
 
 if [ $exitcode = "0" ]; then
     chmod 400 $filename                         # Backup file contains sensitive data!
 
-    echo -e "\nAWS S3 uploader" >> $TEMPFILE
-    aws s3 cp $filename s3://$bucketname/$bucketfolder/ 2>> $TEMPFILE 
+    echo -e "\nAWS S3 uploader" >> $tempfile
+    aws s3 cp $filename s3://$bucketname/$bucketfolder/ 2>> $tempfile 
 
-    echo "Successful backup from $hostname!" >> $TEMPFILE
-    mail -s "Backup: $hostname on $date" $email  < $TEMPFILE
+    echo "Successful backup from $hostname!" >> $tempfile
+    mail -s "Backup: $hostname on $date" $email  < $tempfile
 else
-    echo "WARNING: FAILED BACKUP FROM $hostname with exit code of $exitcode" >> $TEMPFILE
-    mail -s "FAILED Backup: $hostname on $date" $email < $TEMPFILE
+    echo "WARNING: FAILED BACKUP FROM $hostname with exit code of $exitcode" >> $tempfile
+    mail -s "FAILED Backup: $hostname on $date" $email < $tempfile
 fi
