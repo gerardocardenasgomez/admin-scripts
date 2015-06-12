@@ -1,4 +1,6 @@
 {
-    "name":"jane",
-    "age":25
+    "type":"fs",
+    "settings": {
+        "location":"/mnt/snapshots/"
+    }
 }
