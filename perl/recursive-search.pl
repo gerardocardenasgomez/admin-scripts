@@ -2,6 +2,19 @@
 # Usage: ./recursive-search.pl <regex/string> <directories/files to search>
 use File::Find;
 use Term::ANSIColor;
+use Getopt::Long;
+
+GetOptions("help" => \$help);
+
+if ($help){
+    $help_message = <<'EOF';
+Usage: ./recursive-search.pl <regex/string> <directories/files to search>
+
+This script does not and cannot change files.
+EOF
+    print "$help_message";
+    exit(1)
+}
 
 $regex = shift @ARGV;
 
