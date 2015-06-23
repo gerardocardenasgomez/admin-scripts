@@ -8,9 +8,6 @@ redis_server=$1
 results=$(redis-cli -h 127.0.0.1 INFO Persistence | grep rdb_last_save_time | awk -F: '{print $2}' | tr -d '\r')
 now=$(date +%s | tr -d '\r')
 
-#echo $results
-#echo $now
-
 difference=$((now - results))
 hours=$((difference / 3600))
 
