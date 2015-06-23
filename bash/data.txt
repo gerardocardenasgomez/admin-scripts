@@ -1,5 +1,11 @@
 {
+<<<<<<< HEAD
     "transient" : {
         "logging.index.search.slowlog.threshold.query.warn" : "-1"
+=======
+    "type":"fs",
+    "settings": {
+        "location":"/mnt/snapshots/"
+>>>>>>> 1595b9094da3f83bdcae2b314d24fd6c0f66b21b
     }
 }
