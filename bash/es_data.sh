@@ -3,7 +3,7 @@
 # TODO: Make the query function more not awful
 
 action=$1
-server='10.132.219.64'
+server='127.0.0.1'
 port='9200'
 
 server_addr="$server:$port"

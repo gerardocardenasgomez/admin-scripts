@@ -3,6 +3,7 @@ import random
 import urllib2
 import json
 import sys
+import time
 
 domain = sys.argv[1]
 url = 'http://{0}:9200/lists/words/'.format(domain)
@@ -24,5 +25,7 @@ with open('wordlist', 'r') as f:
         if sanity > 0:
             print response
             sanity -= 1
-
+    
+        time.sleep(0.3)
+        
         retval.close()

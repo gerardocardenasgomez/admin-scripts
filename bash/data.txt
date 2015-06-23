@@ -1,4 +1,5 @@
 {
-    "name":"jane",
-    "age":25
+    "transient" : {
+        "logging.index.search.slowlog.threshold.query.warn" : "-1"
+    }
 }
