@@ -18,12 +18,11 @@ redis_fetch () {
 }
 
 check_last_backup() {
-    hours_hard=12
-    hours_soft=6
-
     ip_addr=$1
+    hours_soft=$2
+    hours_hard=$3
 
-    results=$(redis_fetch $redis_ipaddr INFO rdb_last_save_time)
+    results=$(redis_fetch $ip_addr INFO rdb_last_save_time)
     now=$(date +%s | tr -d '\r')
 
     difference=$((now - results))
@@ -31,14 +30,14 @@ check_last_backup() {
 
     if [[ $hours -gt $hours_soft ]]; then
         if [[ $hours -gt $hours_hard ]]; then
-            echo "CRITICAL: It has been $hours since the last save!"
+            echo "CRITICAL: It has been $hours hours since the last save!"
             exit 2
         fi
     
-        echo "WARNING: It has been $hours since the last save!"
+        echo "WARNING: It has been $hours hours since the last save!"
             exit 1
     else
-        echo "OK: It has been $hours since the last save."
+        echo "OK: It has been $hours hours since the last save."
         exit 0
     fi
 }
@@ -84,5 +83,8 @@ case $action in
         ;;
     CONFIG)
         redis_fetch $ip_addr CONFIG $parameter
+        ;;
+    CHECK_BACKUP)
+        check_last_backup $ip_addr $parameter $4
         ;;
 esac
