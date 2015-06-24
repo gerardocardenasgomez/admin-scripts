@@ -59,7 +59,8 @@ perform_backup() {
     do
         result=$(redis_fetch $ip_addr INFO rdb_bgsave_in_progress)
         if [[ $result == "0" ]]; then
-            echo "we're copying ${redis_dir}/${redis_dbname} to $target_dir"
+            now=$(date +%Y%m%d%H)
+            echo "OK: Copied ${redis_dir}/${redis_dbname} to $target_dir/${redis_dbname}.${now}"
             exit 0
         fi
 
