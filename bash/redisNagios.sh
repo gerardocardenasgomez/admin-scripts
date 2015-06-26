@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
+# Author: Gerardo Cardenas-Gomez
+# Email: gerardo@gerardobsd.com
+# Version: 0.0.1
+# TODO This file currently connects to Redis too many times--fix this!
+# TODO Consider breaking up this file into more than one script.
 
+############
+
+# This function is going to return values that are requested
+# 
+# TODO possibly figure out a way to do this without returning
+#     having to connect to the database so many times.
+# 
+# Usage:
+#     redis_fetch <ip_addr> <INFO|CONFIG> <parameter>
+# 
+# TODO get better at checking for mistakes and returning proper exit codes
+# 
 redis_fetch () {
     ip_addr=$1
     query_type=$2
@@ -16,6 +33,16 @@ redis_fetch () {
 
     echo $results
 }
+
+
+# This function will be used with Nagios. It checks the rdb_last_save_time
+#     and then sees if it the last date was within a specified range.
+# 
+# Usage:
+#     check_last_backup <ip_addr> <soft check> <hard check>
+# 
+# The soft check will produce a warning and exit code 1
+# The hard check will produce a critical error and exit code 2
 
 check_last_backup() {
     ip_addr=$1
@@ -41,6 +68,16 @@ check_last_backup() {
         exit 0
     fi
 }
+
+# This function checks the database for the back up file name and directory.
+#     The check is done so that the script does not end up backing up a 
+#     stale file that the DB is not actually using. Then, the function will copy
+#     the back up to the specified target directory and then appending
+#     a timestamp of YEAR, MONTH, DAY, HOUR to the file so it can
+#     display properly with commans such as ls.
+# 
+# Usage:
+#     perform_backup <ip_addr> <target directory
 
 perform_backup() {
     ip_addr=$1
