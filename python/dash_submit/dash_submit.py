@@ -20,12 +20,12 @@ user_command = sys.argv[1]
 #
 # ****
 
-def send_json(url, host, fields_array):
+def send_json(url, auth_token, host, fields_array):
     req_type = {'Content-Type', 'application/json'}
 
     for field in fields_array:
         var_name = "{0}_{1}".format(host, field.name)
-        data = json.dumps({var_name : field.value})
+        data = json.dumps({"auth_token" : auth_token, var_name : field.value})
         req = urllib2.Request(url, data, req_type)
         res = urllib2.urlopen(req)
         response = res.read()
@@ -66,6 +66,7 @@ parser.add_option("-u", "--user_name", action="store", dest="user_name", default
 parser.add_option("-i", "--from_ip", action="store", dest="from_ip", default=None)
 
 parser.add_option("--url", action="store", dest="url", default="127.0.0.1:3030")
+parser.add_option("--auth_token", action="store", dest="auth_token", default=None)
 parser.add_option("--host", action="store", dest="host", default="localhost")
 
 options, args = parser.parse_args()
@@ -81,6 +82,7 @@ host_user_name = Field("user_name", options.user_name)
 host_from_ip = Field("from_ip", options.from_ip)
 
 url = options.url
+auth_token = options.auth_token
 host = options.host
 
 # ****
@@ -102,25 +104,25 @@ if user_command == "aide" or user_command == "all":
     fields_array = [host_aide_status]
     check_value(fields_array)
 
-    send_json(url, host, fields_array)
+    send_json(url, auth_token, host, fields_array)
 
 if user_command == "status" or user_command == "all":
     fields_array = [host_status]
     check_value(fields_array)
 
-    send_json(url, host, fields_array)
+    send_json(url, auth_token, host, fields_array)
 
 if user_command == "failed_logins" or user_command == "all":
     fields_array = [host_failed_logins]
     check_value(fields_array)
 
-    send_json(url, host, fields_array)
+    send_json(url, auth_token, host, fields_array)
 
 if user_command == "last_login" or user_command == "all":
     fields_array = [host_last_login]
     check_value(fields_array)
 
-    send_json(url, host, fields_array)
+    send_json(url, auth_token, host, fields_array)
 
 if user_command == "log" or user_command == "all":
     fields_array = [host_login_type, host_user_name, host_from_ip]
@@ -131,4 +133,4 @@ if user_command == "log" or user_command == "all":
 
     fields_array = [host_login_text]
 
-    send_json(url, host, fields_array)
+    send_json(url, auth_token, host, fields_array)
