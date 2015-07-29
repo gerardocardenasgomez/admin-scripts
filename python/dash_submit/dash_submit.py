@@ -20,16 +20,26 @@ user_command = sys.argv[1]
 # Iterate over the fields, sending a json request with each iteration.
 # Each field has a field.name and a field.value
 #
+# Allow the widget_type to be specified if necessary--normally text is fine.
+#
 # ****
 
-def send_json(url, auth_token, host, fields_array):
+def send_json(url, auth_token, host, fields_array, widget_type="text"):
 
-    for field in fields_array:
-        url = "{0}/widgets/{1}_{2}".format(url, host, field.name)
-        data = json.dumps({"auth_token" : auth_token, "text" : field.value})
-        req = urllib2.Request(url)
-        req.add_header('Content-Type', 'application/json')
-        response = urllib2.urlopen(req, data)
+    if widget_type == "text":
+        for field in fields_array:
+            url = "{0}/widgets/{1}_{2}".format(url, host, field.name)
+            data = json.dumps({"auth_token" : auth_token, "text" : field.value})
+            req = urllib2.Request(url)
+            req.add_header('Content-Type', 'application/json')
+            response = urllib2.urlopen(req, data)
+    elif widget_type == "list":
+        for field in fields_array:
+            url = "{0}/widgets/{1}_{2}".format(url, host, field.name)
+            data = json.dumps({"auth_token" : auth_token, "items" : field.value})
+            req = urllib2.Request(url)
+            req.add_header('Content-Type', 'application/json')
+            response = urllib2.urlopen(req, data)
 
 # ****
 #
@@ -68,6 +78,7 @@ parser.add_option("--url", action="store", dest="url", default="http://127.0.0.1
 parser.add_option("--auth_token", action="store", dest="auth_token", default=None)
 parser.add_option("--host", action="store", dest="host", default="localhost")
 parser.add_option("--config", action="store", dest="conf_path", default="./dash_submit.conf")
+parser.add_option("--from-file", action="store", dest="from_file", default=None)
 
 options, args = parser.parse_args()
 
@@ -85,6 +96,7 @@ url = options.url
 auth_token = options.auth_token
 host = options.host
 conf_path = options.conf_path
+from_file = options.from_file
 
 # ****
 #
@@ -148,11 +160,38 @@ if user_command == "last_login" or user_command == "all":
 
     send_json(url, auth_token, host, fields_array)
 
+# ****
+#
+# Allow the input to come from a log file. If from_file is specified, get the lines from the file.
+#   Then, put those lines into a List of {'label':'text', 'value:'text'} documents that Dashing will accept.
+#   Specify the widget_type as "list."
+#
+# ****
+
+if user_command == "log" and from_file:
+    lines = []
+    formatted_array = []
+    
+    with open(from_file, 'r') as f:
+        lines = f.readlines()
+    
+    for line in lines:
+        words = line.split(" ")
+        pretty_msg = ' '.join(map(str, words[1:]))
+        formatted_array.append({"label" : "{0}".format(words[0]), "value" : "{0}".format(pretty_msg)})
+
+    host_login_text = Field("login_text", formatted_array)
+    fields_array = [host_login_text]
+
+    send_json(url, auth_token, host, fields_array, widget_type="list") 
+
+    exit(0)
+
 if user_command == "log" or user_command == "all":
     fields_array = [host_login_type, host_user_name, host_from_ip]
     check_value(fields_array)
 
-    msg = "{0} {1} {2}".format(host_login_type, host_user_name, host_from_ip)
+    msg = "{0} {1} {2}".format(host_login_type.value, host_user_name.value, host_from_ip.value)
     host_login_text = Field("login_text", msg)
 
     fields_array = [host_login_text]
