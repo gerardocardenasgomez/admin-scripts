@@ -102,7 +102,11 @@ host = options.host
 if os.path.isfile(conf_path) and os.access(conf_path, os.R_OK) and auth_token == None:
     config = ConfigParser.RawConfigParser()
     config.read('dash_submit.conf')
-    auth_token = config.get('auth', 'auth_token')
+    
+    if auth_token == None:
+        auth_token = config.get('data', 'auth_token')
+    if url == None:
+        url = config.get('data', 'url')
 else:
     auth_token = None
 
