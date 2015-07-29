@@ -4,11 +4,15 @@ import json
 import optparse
 import sys
 import urllib2
-
+import ConfigParser
+import os
+import os.path
 #
 # Do not make changes below this line
 #
 
+
+conf_path = './dash_submit.conf'
 user_command = sys.argv[1]
 
 # ****
@@ -21,16 +25,17 @@ user_command = sys.argv[1]
 # ****
 
 def send_json(url, auth_token, host, fields_array):
-    req_type = {'Content-Type', 'application/json'}
 
     for field in fields_array:
-        var_name = "{0}_{1}".format(host, field.name)
-        data = json.dumps({"auth_token" : auth_token, var_name : field.value})
-        req = urllib2.Request(url, data, req_type)
-        res = urllib2.urlopen(req)
-        response = res.read()
-        print response
-        res.close()
+        #var_name = "{0}_{1}".format(host, field.name)
+        url = "{0}/widgets/{1}_{2}".format(url, host, field.name)
+        print url
+        data = json.dumps({"auth_token" : auth_token, "text" : field.value})
+        print data
+        req = urllib2.Request(url)
+        req.add_header('Content-Type', 'application/json')
+        response = urllib2.urlopen(req, data)
+        print response.read()
 
 # ****
 #
@@ -65,7 +70,7 @@ parser.add_option("-t", "--login_type", action="store", dest="login_type", defau
 parser.add_option("-u", "--user_name", action="store", dest="user_name", default=None)
 parser.add_option("-i", "--from_ip", action="store", dest="from_ip", default=None)
 
-parser.add_option("--url", action="store", dest="url", default="127.0.0.1:3030")
+parser.add_option("--url", action="store", dest="url", default="http://127.0.0.1:3030")
 parser.add_option("--auth_token", action="store", dest="auth_token", default=None)
 parser.add_option("--host", action="store", dest="host", default="localhost")
 
@@ -84,6 +89,25 @@ host_from_ip = Field("from_ip", options.from_ip)
 url = options.url
 auth_token = options.auth_token
 host = options.host
+
+# ****
+#
+# Set the token -- either use the token from options, token from config file, or set to None
+#
+# conf_file should have the same name as the .py executable
+# conf_file should have the following format:
+# [<section name>]
+# <key>=<value>
+#
+# ****
+
+# Check if conf_path is a file and is readable
+if os.path.isfile(conf_path) and os.access(conf_path, os.R_OK) and auth_token == None:
+    config = ConfigParser.RawConfigParser()
+    config.read('dash_submit.conf')
+    auth_token = config.get('auth', 'auth_token')
+else:
+    auth_token = None
 
 # ****
 #
