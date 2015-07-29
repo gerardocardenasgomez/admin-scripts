@@ -11,8 +11,7 @@ import os.path
 # Do not make changes below this line
 #
 
-
-conf_path = './dash_submit.conf'
+#conf_path = './dash_submit.conf'
 user_command = sys.argv[1]
 
 # ****
@@ -69,6 +68,7 @@ parser.add_option("-i", "--from_ip", action="store", dest="from_ip", default=Non
 parser.add_option("--url", action="store", dest="url", default="http://127.0.0.1:3030")
 parser.add_option("--auth_token", action="store", dest="auth_token", default=None)
 parser.add_option("--host", action="store", dest="host", default="localhost")
+parser.add_option("--config", action="store", dest="conf_path", default="./dash_submit.conf")
 
 options, args = parser.parse_args()
 
@@ -85,6 +85,7 @@ host_from_ip = Field("from_ip", options.from_ip)
 url = options.url
 auth_token = options.auth_token
 host = options.host
+conf_path = options.conf_path
 
 # ****
 #
