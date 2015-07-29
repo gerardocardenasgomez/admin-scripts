@@ -101,7 +101,7 @@ conf_path = options.conf_path
 # Check if conf_path is a file and is readable
 if os.path.isfile(conf_path) and os.access(conf_path, os.R_OK) and auth_token == None:
     config = ConfigParser.RawConfigParser()
-    config.read('dash_submit.conf')
+    config.read(conf_path)
     
     if auth_token == None:
         auth_token = config.get('data', 'auth_token')
