@@ -32,7 +32,6 @@ def send_json(url, auth_token, host, fields_array):
         req = urllib2.Request(url)
         req.add_header('Content-Type', 'application/json')
         response = urllib2.urlopen(req, data)
-        print response.read()
 
 # ****
 #
