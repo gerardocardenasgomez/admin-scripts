@@ -11,7 +11,6 @@ import os.path
 # Do not make changes below this line
 #
 
-#conf_path = './dash_submit.conf'
 user_command = sys.argv[1]
 
 # ****
