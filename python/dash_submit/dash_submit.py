@@ -27,11 +27,8 @@ user_command = sys.argv[1]
 def send_json(url, auth_token, host, fields_array):
 
     for field in fields_array:
-        #var_name = "{0}_{1}".format(host, field.name)
         url = "{0}/widgets/{1}_{2}".format(url, host, field.name)
-        print url
         data = json.dumps({"auth_token" : auth_token, "text" : field.value})
-        print data
         req = urllib2.Request(url)
         req.add_header('Content-Type', 'application/json')
         response = urllib2.urlopen(req, data)
