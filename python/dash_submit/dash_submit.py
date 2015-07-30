@@ -99,6 +99,7 @@ parser.add_option("-t", "--login_type", action="store", dest="login_type", defau
 parser.add_option("-u", "--user_name", action="store", dest="user_name", default=None)
 parser.add_option("-i", "--from_ip", action="store", dest="from_ip", default=None)
 
+parser.add_option("--text", action="store", dest="text", default=None)
 parser.add_option("--label", action="store", dest="label", default=None)
 parser.add_option("--label-type", action="store", dest="label_type", default=None)
 parser.add_option("--url", action="store", dest="url", default="http://127.0.0.1:3030")
@@ -119,13 +120,14 @@ host_login_type = Field("login_type", options.login_type)
 host_user_name = Field("user_name", options.user_name)
 host_from_ip = Field("from_ip", options.from_ip)
 
-label=options.label
-label_type=options.label_type
-url = options.url
-auth_token = options.auth_token
-host = options.host
-conf_path = options.conf_path
-from_file = options.from_file
+text        =   options.text
+label       =   options.label
+label_type  =   options.label_type
+url         =   options.url
+auth_token  =   options.auth_token
+host        =   options.host
+conf_path   =   options.conf_path
+from_file   =   options.from_file
 
 # ****
 #
@@ -218,11 +220,16 @@ if user_command == "log" or user_command == "all":
 
     send_json(url, auth_token, host, fields_array)
 
-if user_command == "custom" and from_file:
-    if label_type == "list":
+if user_command == "custom":
+    if label_type == "list" and from_file:
         formatted_array = read_file(from_file)
         
         host_custom_text = Field("{0}".format(label), formatted_array)
         fields_array = [host_custom_text]
 
         send_json(url, auth_token, host, fields_array, widget_type="list")
+    if label_type == "text":
+        host_custom_text = Field("{0}".format(label), text)
+        fields_array = [host_custom_text]
+
+        send_json(url, auth_token, host, fields_array, widget_type="text")
