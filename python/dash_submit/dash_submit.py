@@ -15,6 +15,31 @@ user_command = sys.argv[1]
 
 # ****
 #
+# Getting input from a file is slightly more difficult.
+# This method should accept a filename and return a "formatted" array that
+#   dashing will accept.
+#
+#   TODO: Add a way to check that the file exists and that it is readable
+#
+# ****
+
+def read_file(from_file):
+    lines = []
+    formatted_array = []
+    
+    with open(from_file, 'r') as f:
+        lines = f.readlines()
+    
+    for line in lines:
+        words = line.split(" ")
+        pretty_msg = ' '.join(map(str, words[1:]))
+        formatted_array.append({"label" : "{0}".format(words[0]), "value" : "{0}".format(pretty_msg)})
+
+    return formatted_array
+
+
+# ****
+#
 # Send a json document to the URL
 # The host variable is what will specify the host for the module in Dashing
 # Iterate over the fields, sending a json request with each iteration.
@@ -74,6 +99,8 @@ parser.add_option("-t", "--login_type", action="store", dest="login_type", defau
 parser.add_option("-u", "--user_name", action="store", dest="user_name", default=None)
 parser.add_option("-i", "--from_ip", action="store", dest="from_ip", default=None)
 
+parser.add_option("--label", action="store", dest="label", default=None)
+parser.add_option("--label-type", action="store", dest="label_type", default=None)
 parser.add_option("--url", action="store", dest="url", default="http://127.0.0.1:3030")
 parser.add_option("--auth_token", action="store", dest="auth_token", default=None)
 parser.add_option("--host", action="store", dest="host", default="localhost")
@@ -92,6 +119,8 @@ host_login_type = Field("login_type", options.login_type)
 host_user_name = Field("user_name", options.user_name)
 host_from_ip = Field("from_ip", options.from_ip)
 
+label=options.label
+label_type=options.label_type
 url = options.url
 auth_token = options.auth_token
 host = options.host
@@ -169,16 +198,7 @@ if user_command == "last_login" or user_command == "all":
 # ****
 
 if user_command == "log" and from_file:
-    lines = []
-    formatted_array = []
-    
-    with open(from_file, 'r') as f:
-        lines = f.readlines()
-    
-    for line in lines:
-        words = line.split(" ")
-        pretty_msg = ' '.join(map(str, words[1:]))
-        formatted_array.append({"label" : "{0}".format(words[0]), "value" : "{0}".format(pretty_msg)})
+    formatted_array = read_file(from_file)
 
     host_login_text = Field("login_text", formatted_array)
     fields_array = [host_login_text]
@@ -197,3 +217,12 @@ if user_command == "log" or user_command == "all":
     fields_array = [host_login_text]
 
     send_json(url, auth_token, host, fields_array)
+
+if user_command == "custom" and from_file:
+    if label_type == "list":
+        formatted_array = read_file(from_file)
+        
+        host_custom_text = Field("{0}".format(label), formatted_array)
+        fields_array = [host_custom_text]
+
+        send_json(url, auth_token, host, fields_array, widget_type="list")
