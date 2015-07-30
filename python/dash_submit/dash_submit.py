@@ -220,6 +220,15 @@ if user_command == "log" or user_command == "all":
 
     send_json(url, auth_token, host, fields_array)
 
+# ****
+#
+# Allow for a custom specification. Custom with --label-type="list" will require a file because that's where it gets the data from.
+# Custom with --label=type="text" only requires the --text="<text>" option for its data.
+#
+# TODO: Possibly change all fields to use custom now
+#
+# ****
+
 if user_command == "custom":
     if label_type == "list" and from_file:
         formatted_array = read_file(from_file)
