@@ -1,10 +1,12 @@
 # Dash_Submit.py
 
+TODO: Allow for an append option.
+
 ## Examples
 
-./dash_submit.py failed_logins -f 5 --host="testing"  
-./dash_submit.py status -s "Online" --host="web001"  
-./dash_submit.py aide -a 0 --host="management"  
+./dash_submit.py update --label=login_text --from-file=logs.txt --label-type=list --host=testing
+./dash_submit.py update --label=aide_status --label-type=text --host=testing --text=0
+./dash_submit.py update --label=status --label-type=text --host=testing --text=no
 
 ## Config File
 
