@@ -4,9 +4,9 @@ TODO: Allow for an append option.
 
 ## Examples
 
-./dash_submit.py update --label=login_text --from-file=logs.txt --label-type=list --host=testing
-./dash_submit.py update --label=aide_status --label-type=text --host=testing --text=0
-./dash_submit.py update --label=status --label-type=text --host=testing --text=no
+./dash_submit.py update --label=login_text --from-file=logs.txt --label-type=list --host=testing  
+./dash_submit.py update --label=aide_status --label-type=text --host=testing --text=0  
+./dash_submit.py update --label=status --label-type=text --host=testing --text=no  
 
 ## Config File
 
