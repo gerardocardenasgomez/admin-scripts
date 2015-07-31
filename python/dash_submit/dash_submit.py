@@ -72,6 +72,8 @@ def send_json(url, auth_token, host, fields_array, widget_type="text"):
 # Iterate over the fields, check that they are not set to the default value of None.
 # Each field has a field.name and a field.value
 #
+#   TODO: Refactor so this is no longer here or so it can be used some way.
+#
 # ****
 
 def check_value(fields_array):
@@ -91,14 +93,6 @@ Field = collections.namedtuple("Field", ['name', 'value'])
 
 parser = optparse.OptionParser()
 
-parser.add_option("-s", "--status", action="store", dest="status", default=None)
-parser.add_option("-f", "--failed_logins", action="store", dest="failed_logins", default=None)
-parser.add_option("-a", "--aide_status", action="store", dest="aide_status", default=None)
-parser.add_option("-l", "--last_login", action="store", dest="last_login", default=None)
-parser.add_option("-t", "--login_type", action="store", dest="login_type", default=None)
-parser.add_option("-u", "--user_name", action="store", dest="user_name", default=None)
-parser.add_option("-i", "--from_ip", action="store", dest="from_ip", default=None)
-
 parser.add_option("--text", action="store", dest="text", default=None)
 parser.add_option("--label", action="store", dest="label", default=None)
 parser.add_option("--label-type", action="store", dest="label_type", default=None)
@@ -109,16 +103,6 @@ parser.add_option("--config", action="store", dest="conf_path", default="./dash_
 parser.add_option("--from-file", action="store", dest="from_file", default=None)
 
 options, args = parser.parse_args()
-
-# Set the options with a host_ prefix
-
-host_status = Field("status", options.status)
-host_failed_logins = Field("failed_logins", options.failed_logins)
-host_aide_status = Field("aide_status", options.aide_status)
-host_last_login = Field("last_login", options.last_login)
-host_login_type = Field("login_type", options.login_type)
-host_user_name = Field("user_name", options.user_name)
-host_from_ip = Field("from_ip", options.from_ip)
 
 text        =   options.text
 label       =   options.label
@@ -154,82 +138,21 @@ else:
 
 # ****
 #
-# check_value accepts an array of Named Tuples.
-# It then iterates over the value of every named tuple to
-#   check if the value is None. If None, exit with code 0 and print error message
+# Allow for an update specification. Update with --label-type="list" will require a file because that's where it gets the data from.
+# Update with --label=type="text" only requires the --text="<text>" option for its data.
 #
 # send_json accepts a url and an array of Named Tuples.
 # send_json is in charge of sending the json document to the specified URL
-#
-# Here, we first see if the user wants to send a field aide, status, failed logins, last_login, log, or all.
-#   Then we check if the required fields have been assigned a value.
-#   It is not this script's job to check that the values are proper, only that they are present.
+# It is not this script's job to check that the values are proper, only that they are present.
 #
 # ****
 
-if user_command == "aide" or user_command == "all":
-    fields_array = [host_aide_status]
-    check_value(fields_array)
-
-    send_json(url, auth_token, host, fields_array)
-
-if user_command == "status" or user_command == "all":
-    fields_array = [host_status]
-    check_value(fields_array)
-
-    send_json(url, auth_token, host, fields_array)
-
-if user_command == "failed_logins" or user_command == "all":
-    fields_array = [host_failed_logins]
-    check_value(fields_array)
-
-    send_json(url, auth_token, host, fields_array)
-
-if user_command == "last_login" or user_command == "all":
-    fields_array = [host_last_login]
-    check_value(fields_array)
-
-    send_json(url, auth_token, host, fields_array)
-
-# ****
-#
-# Allow the input to come from a log file. If from_file is specified, get the lines from the file.
-#   Then, put those lines into a List of {'label':'text', 'value:'text'} documents that Dashing will accept.
-#   Specify the widget_type as "list."
-#
-# ****
-
-if user_command == "log" and from_file:
-    formatted_array = read_file(from_file)
-
-    host_login_text = Field("login_text", formatted_array)
-    fields_array = [host_login_text]
-
-    send_json(url, auth_token, host, fields_array, widget_type="list") 
-
-    exit(0)
-
-if user_command == "log" or user_command == "all":
-    fields_array = [host_login_type, host_user_name, host_from_ip]
-    check_value(fields_array)
-
-    msg = "{0} {1} {2}".format(host_login_type.value, host_user_name.value, host_from_ip.value)
-    host_login_text = Field("login_text", msg)
-
-    fields_array = [host_login_text]
-
-    send_json(url, auth_token, host, fields_array)
-
-# ****
-#
-# Allow for a custom specification. Custom with --label-type="list" will require a file because that's where it gets the data from.
-# Custom with --label=type="text" only requires the --text="<text>" option for its data.
-#
-# TODO: Possibly change all fields to use custom now
-#
-# ****
-
-if user_command == "custom":
+if user_command == "update":
+    #
+    # Allow the input to come from a log file. If from_file is specified, get the lines from the file.
+    #   Then, put those lines into a List of {'label':'text', 'value:'text'} documents that Dashing will accept.
+    #   Specify the widget_type as "list."
+    #
     if label_type == "list" and from_file:
         formatted_array = read_file(from_file)
         
