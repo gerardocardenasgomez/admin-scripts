@@ -65,6 +65,13 @@ def send_json(url, auth_token, host, fields_array, widget_type="text"):
             req = urllib2.Request(url)
             req.add_header('Content-Type', 'application/json')
             response = urllib2.urlopen(req, data)
+    elif widget_type == "number":
+        for field in fields_array:
+            url = "{0}/widgets/{1}_{2}".format(url, host, field.name)
+            data = json.dumps({"auth_token" : auth_token, "current" : field.value})
+            req = urllib2.Request(url)
+            req.add_header('Content-Type', 'application/json')
+            response = urllib2.urlopen(req, data)
 
 # ****
 #
@@ -165,3 +172,8 @@ if user_command == "update":
         fields_array = [host_custom_text]
 
         send_json(url, auth_token, host, fields_array, widget_type="text")
+    if label_type == "number":
+        host_custom_text = Field("{0}".format(label), text)
+        fields_array = [host_custom_text]
+
+        send_json(url, auth_token, host, fields_array, widget_type="number")
