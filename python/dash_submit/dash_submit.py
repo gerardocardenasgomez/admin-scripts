@@ -7,6 +7,7 @@ import urllib2
 import ConfigParser
 import os
 import os.path
+# VERSION 0.2.1
 #
 # Do not make changes below this line
 #
@@ -103,7 +104,7 @@ parser = optparse.OptionParser()
 parser.add_option("--text", action="store", dest="text", default=None)
 parser.add_option("--label", action="store", dest="label", default=None)
 parser.add_option("--label-type", action="store", dest="label_type", default=None)
-parser.add_option("--url", action="store", dest="url", default="http://127.0.0.1:3030")
+parser.add_option("--url", action="store", dest="url", default=None)
 parser.add_option("--auth_token", action="store", dest="auth_token", default=None)
 parser.add_option("--host", action="store", dest="host", default="localhost")
 parser.add_option("--config", action="store", dest="conf_path", default="./dash_submit.conf")
