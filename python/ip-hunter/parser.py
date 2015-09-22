@@ -32,7 +32,7 @@ def parse_line(line):
     
     split_line = line.split(' ')
     for string in split_line:
-        if (re.search(ip_addr, string)):
+        if (re.match(ip_addr, string)):
             result += string + ' '
             if string in ip_db:
                 ip_db[string] = ip_db[string] + 1
