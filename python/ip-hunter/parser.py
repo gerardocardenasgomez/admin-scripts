@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Last updated Sept 24, 2015
 import sys
 import os
 import os.path
