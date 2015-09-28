@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-. aws_api.txt
+. /root/sec/aws_api.txt
 
 temp_file=$(mktemp)
 today=$(date +%Y-%m-%d)
@@ -24,5 +24,9 @@ fi
 echo \{\"host\":\"$HOSTNAME\",\"date\":\"$today\",\"time\":\"$time\",\"event\":\"$event\"\} > $temp_file
 
 curl -XPOST $url -H "x-api-key: $api_key" -H "Content-Type: application/json" --data-binary @$temp_file
+
+echo \{\"message\":\"$HOSTNAME\ $today\ $time\ $event\"\} > $temp_file
+
+curl -XPOST "api.hipchat.com/v2/room/sys_alerts/message?auth_token=$hipchat_key" -H "Content-Type: application/json" --data-binary @$temp_file
 
 rm $temp_file
