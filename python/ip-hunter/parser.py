@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-# Last updated Sept 24, 2015
+# Last updated Oct 1, 2015
+# Version 1.2
+#
+# Now sorts results, ascending order
+# Uses a generator to go over every line
+#
+import hashlib
 import sys
 import os
 import os.path
@@ -33,7 +39,7 @@ document_uri = re.compile(document_uri_pattern)
 # parse_line should return at least an IP address
 # Ideally it should return IP address + resource 
 #
-def parse_line(line):
+def parse_line(filename, line):
     result = ''
     
     split_line = line.split(' ')
@@ -56,10 +62,8 @@ def parse_line(line):
         else:
             continue
 
-    if result == '':
-        return None
-    else:
-        return result
+    if result != '':
+        print filename + ' % ' + result
 
 # Check that the arguments are all proper files and are accessible
 # os.access() would be enough except that directories will also return true for os.access()
@@ -76,14 +80,15 @@ for arg in sys.argv[1:]:
 for arg in sys.argv[1:]:
     file = open(arg)
     
-    while True:
-        lines = file.readlines(1000000)
-        if not lines:
-            break
-        for line in lines:
-            parsed_string = parse_line(line)
-            if parsed_string is not None:
-                print arg + ' % ' + parsed_string
+    counter = 0
+
+    generator_object = (parse_line(arg, line) for line in file)
+
+    # Iterate over the generator object and keep count
+    for iteration in generator_object:
+        counter += 1
+
+    print 'parsed {0} lines'.format(counter)
 
 # Make it easy to find the results portion by grepping for '--'
 # Make it visually clear that the following text is for results
@@ -93,6 +98,6 @@ print '-- + --' * 10
 # Print out the number of times each IP address was found in the file(s)
 # Items that appear only once are probably okay -- ignore those
 #
-for key,value in ip_db.items():
-    if value > 1:
-        print "{0} -- {1}".format(value, key)
+for item in sorted(ip_db, key=ip_db.get, reverse=False):
+    if ip_db[item] > 1:
+        print "{0} -- {1}".format(item, ip_db[item])
