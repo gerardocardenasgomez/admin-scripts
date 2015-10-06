@@ -17,10 +17,10 @@ sed -i s/api_key_here/$api/g aws_api.txt
 
 chmod 600 aws_api.txt
 
-wget ""
+wget "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/sec.conf"
 chmod 700 sec.conf
 
-wget ""
+wget "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/yum.conf"
 chmod 700 yum.conf
 
 yum install sec screen
