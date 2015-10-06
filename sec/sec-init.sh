@@ -3,6 +3,9 @@
 wget "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/bash/api.sh"
 chmod +x api.sh
 
+wget "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/sec-updater.sh"
+chmod +x sec-updater.sh
+
 wget "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/bash/aws_api.txt"
 
 echo "Type in URL"
