@@ -26,7 +26,7 @@ if [[ "$1" == "update" ]]; then
     if [[ "$exit_code" -eq 0 ]]; then
         # If screen session is running in the background, send it ctrl+C to kill SEC
         #   then type out sec command and send Enter keypress
-        screen -S "sec" -X stuff $'\cc' && screen -r "sec" -p0 -X stuff 'sudo sec -conf sec.conf -input /var/log/secure' && screen -r "sec" -p0 -X eval "stuff \015"
+        screen -S "sec" -X stuff $'\cc' && screen -r "sec" -p0 -X stuff 'sudo sec -conf sec.conf -conf /root/sec/yum.conf -input /var/log/yum.log -input /var/log/secure' && screen -r "sec" -p0 -X eval "stuff \015"
         screen_exit_code=$?
 
         exit_status $screen_exit_code
