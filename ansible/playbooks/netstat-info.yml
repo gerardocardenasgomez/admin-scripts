@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - script: <location>
+      register: netstat
+
+    - debug: var=netstat.stdout_lines
