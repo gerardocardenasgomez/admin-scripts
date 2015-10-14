@@ -1,0 +1,13 @@
+---
+- hosts: <hosts>
+  gather_facts: no
+  tasks:
+    - copy: src=<file> dest=<dest> owner=root group=root mode=0700
+      register: copyf
+
+    - debug: var=copyf.stdout_lines
+
+    - command: chdir=<dir> <dir>/sec-updater.sh update
+      register: updater
+
+    - debug: var=updater.stdout_lines
