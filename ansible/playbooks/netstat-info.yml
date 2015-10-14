@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: no
   tasks:
-    - script: <location>
+    - script: /home/gerardo/admin-scripts/ansible/netstat-overview.sh
       register: netstat
 
     - debug: var=netstat.stdout_lines
