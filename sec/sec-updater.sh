@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Version 0.1.1
+# Wed Oct 14 12:42:36 EDT 2015
 
 function exit_status {
     if [[ "$1" -eq 0 ]]; then
@@ -13,12 +15,13 @@ function exit_status {
 if [[ "$1" == "update" ]]; then
 
     # Download scripts and config files with -N option to overwrite files
-    wget -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/bash/api.sh"
-    chmod 700 api.sh
-    wget -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/yum.conf"
-    chmod 700 yum.conf
-    wget -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/sec.conf"
-    chmod 700 sec.conf
+    # Use the -P option to set the directory prefix
+    wget -P /root/sec -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/bash/api.sh"
+    chmod 700 /root/sec/api.sh
+    wget -P /root/sec -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/yum.conf"
+    chmod 700 /root/sec/yum.conf
+    wget -P /root/sec -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/sec.conf"
+    chmod 700 /root/sec/sec.conf
 
     screen -list | grep -q '\.sec'
     exit_code=$?
