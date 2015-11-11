@@ -1,0 +1,24 @@
+---
+- hosts: <hosts>
+  gather_facts: no
+  tasks:
+    - yum: name=epel-release state=present
+    - yum: name=sec state=present
+    - yum: name=screen state=present
+
+    - file: path=/root/sec state=directory
+
+    - copy: src=/home/gerardo/ansible/aws_api.txt dest=/root/sec owner=root group=root mode=0700
+      register: copyf
+
+    - debug: var=copyf.stdout_lines
+
+    - copy: src=/home/gerardo/ansible/sec-updater.sh dest=/root/sec owner=root group=root mode=0700
+      register: copyupdater
+
+    - debug: var=copyupdater.stdout_lines
+
+    - command: chdir=/root/sec /root/sec/sec-updater.sh update
+      register: updater
+
+    - debug: var=updater.stdout_lines
