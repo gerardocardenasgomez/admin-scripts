@@ -14,8 +14,13 @@ listening_set = set()
 
 def print_set(set_input, title):
     print " - - - - {0} - - - - ".format(title)
-    for item in set_input:
-        print "|    {0}".format(item)
+
+    if set_input:
+        for item in set_input:
+            print "|    {0}".format(item)
+    else:
+        print "|    None"
+
     print " - - - - - - - -"
     print '\n'
 
