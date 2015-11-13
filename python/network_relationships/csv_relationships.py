@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import re
 import commands
-import socket
 
 reg_ex = '\d+\.\d+\.\d+\.\d+\:\d+'
 ip_addr = re.compile(reg_ex)
@@ -14,25 +13,26 @@ client_to = set()
 listening_set = set()
 
 def print_set(set_input, title):
-    print "".format(title)
-
     if set_input:
         for item in set_input:
-            print "|    {0}".format(item)
-    else:
-        print "|    None"
-
-    print " - - - - - - - -"
-    print '\n'
+            print item
 
 def add_listener(ip):
     listening_set.add(ip)
 
-def add_server_to(ip):
-    server_to.add(ip.split(':')[0])
+def add_server_to(server, client):
+    final_string = ""
+    final_string += server.split(':')[0]
+    final_string += ",SERVER_TO,"
+    final_string += client.split(':')[0]
+    server_to.add(final_string)
     
-def add_client_to(ip):
-    client_to.add(ip.split(':')[0])
+def add_client_to(server, client):
+    final_string = ""
+    final_string += server.split(':')[0]
+    final_string += ",CLIENT_TO,"
+    final_string += client.split(':')[0]
+    client_to.add(final_string)
 
 def add_connections(server, client):
     server_match = re.search(port_number, server)
@@ -43,10 +43,10 @@ def add_connections(server, client):
         client_port = client_match.group(1)
 
         if int(server_port) < 10000:
-            add_server_to(client)
+            add_server_to(server, client)
             add_listener(server)
         if int(client_port) < 10000:
-            add_client_to(client)
+            add_client_to(server, client)
     
 output = commands.getstatusoutput('netstat -lnaut')
 
@@ -60,4 +60,4 @@ for line in output[1].splitlines():
 
 print_set(server_to, "Server to")
 print_set(client_to, "Client to")
-print_set(listening_set, "Listening Interfaces")
+#print_set(listening_set, "Listening Interfaces")
