@@ -2,15 +2,22 @@
 import re
 import commands
 
-reg_ex = '\d+\.\d+\.\d+\.\d+\:\d+'
-ip_addr = re.compile(reg_ex)
+def compile_regex(reg_ex):
+    return re.compile(reg_ex)
 
-port_regex = ':(\d+)'
-port_number = re.compile(port_regex)
+# reg_ex = '\d+\.\d+\.\d+\.\d+\:\d+'
+ip_addr = compile_regex('\d+\.\d+\.\d+\.\d+\:\d+')
+
+# reg_ex = '\d+\.\d+\.\d+\.\d+\:\d+\s+\d+\.\d+\.\d+\.\d+'
+port_relations = compile_regex('\d+\.\d+\.\d+\.\d+\:\d+\s+\d+\.\d+\.\d+\.\d+\:\d+')
+
+# port_regex = ':(\d+)'
+port_number = compile_regex(':(\d+)')
 
 server_to = set()
 client_to = set()
 listening_set = set()
+port_relationships_set = set()
 
 def print_set(set_input, title):
     print " - - - - {0} - - - - ".format(title)
@@ -23,6 +30,27 @@ def print_set(set_input, title):
 
     print " - - - - - - - -"
     print '\n'
+
+def add_port_relations(ip_string):
+    ip_array = ip_string.split(':')
+
+    local_ip = ip_array[0]
+    local_port = ip_array[1]
+
+    local_port = int(ip_array[1].split(" ")[0])
+
+    remote_ip = ip_array[1].split(" ")[-1]
+
+    remote_port = int(ip_array[2])
+
+    if local_port < 10000 and remote_port > 10000:
+        parsed_string = local_ip + ':' + str(local_port) + '        ' + remote_ip
+    elif local_port > 10000 and remote_port < 10000:
+        parsed_string = local_ip + '        ' + remote_ip + ':' + str(remote_port)
+    else:
+        parsed_string = ip_string
+
+    port_relationships_set.add(parsed_string)
 
 def add_listener(ip):
     listening_set.add(ip)
@@ -57,6 +85,13 @@ for line in output[1].splitlines():
         else:
             add_listener(match[0])
 
+    match = re.findall(port_relations, line)
+    if match:
+        if '0.0.0.0' in match[0]:
+            continue
+        add_port_relations(match[0])        
+
 print_set(server_to, "Server to")
 print_set(client_to, "Client to")
 print_set(listening_set, "Listening Interfaces")
+print_set(port_relationships_set, "Port Relationships")
