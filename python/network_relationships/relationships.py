@@ -44,11 +44,11 @@ def add_port_relations(ip_string):
 
     remote_port = int(ip_array[2])
 
-    if local_port < 15000 and remote_port > 15000:
+    if local_port < 12000 and remote_port > 12000:
         string_length = len(local_ip) + len(str(local_port)) + 1
         num_of_spaces = 37 - string_length
         parsed_string = local_ip + ':' + str(local_port) + (' ' * num_of_spaces) + remote_ip
-    elif local_port > 15000 and remote_port < 15000:
+    elif local_port > 12000 and remote_port < 12000:
         string_length = len(local_ip)
         num_of_spaces = 37 - string_length
         parsed_string = local_ip + (' ' * num_of_spaces) + remote_ip + ':' + str(remote_port)
