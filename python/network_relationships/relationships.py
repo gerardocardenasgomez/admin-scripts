@@ -23,7 +23,8 @@ def print_set(set_input, title):
     print " - - - - {0} - - - - ".format(title)
 
     if set_input:
-        for item in set_input:
+        sorted_set_input = sorted(set_input)
+        for item in sorted_set_input:
             print "|    {0}".format(item)
     else:
         print "|    None"
@@ -43,10 +44,14 @@ def add_port_relations(ip_string):
 
     remote_port = int(ip_array[2])
 
-    if local_port < 10000 and remote_port > 10000:
-        parsed_string = local_ip + ':' + str(local_port) + '        ' + remote_ip
-    elif local_port > 10000 and remote_port < 10000:
-        parsed_string = local_ip + '        ' + remote_ip + ':' + str(remote_port)
+    if local_port < 15000 and remote_port > 15000:
+        string_length = len(local_ip) + len(str(local_port)) + 1
+        num_of_spaces = 37 - string_length
+        parsed_string = local_ip + ':' + str(local_port) + (' ' * num_of_spaces) + remote_ip
+    elif local_port > 15000 and remote_port < 15000:
+        string_length = len(local_ip)
+        num_of_spaces = 37 - string_length
+        parsed_string = local_ip + (' ' * num_of_spaces) + remote_ip + ':' + str(remote_port)
     else:
         parsed_string = ip_string
 
