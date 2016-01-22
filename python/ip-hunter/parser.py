@@ -62,6 +62,9 @@ def parse_line(filename, line):
         else:
             continue
 
+# This prints out the data that the script parsed for each line
+# Comment this out if you just want the IP count
+#
     if result != '':
         print filename + ' % ' + result
 
