@@ -33,4 +33,4 @@ if [[ "$1" == "withscreen" ]]; then
     screen -dmS sec bash -c 'sec -conf /root/sec/sec.conf -conf /root/sec/yum.conf -input /var/log/secure -input /var/log/yum.log'
 fi
 
-exit(0)
+exit 0
