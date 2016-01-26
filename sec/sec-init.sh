@@ -26,10 +26,10 @@ chmod 700 sec.conf
 wget "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/yum.conf"
 chmod 700 yum.conf
 
-yum install sec screen
-
 # By default, don't start the screen processes
 if [[ "$1" == "withscreen" ]]; then
+    yum install sec screen
+
     screen -dmS sec bash -c 'sec -conf /root/sec/sec.conf -conf /root/sec/yum.conf -input /var/log/secure -input /var/log/yum.log'
 fi
 
