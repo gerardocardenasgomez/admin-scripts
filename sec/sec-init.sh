@@ -28,4 +28,9 @@ chmod 700 yum.conf
 
 yum install sec screen
 
-screen -dmS sec bash -c 'sec -conf /root/sec/sec.conf -conf /root/sec/yum.conf -input /var/log/secure -input /var/log/yum.log'
+# By default, don't start the screen processes
+if [[ "$1" == "withscreen" ]]; then
+    screen -dmS sec bash -c 'sec -conf /root/sec/sec.conf -conf /root/sec/yum.conf -input /var/log/secure -input /var/log/yum.log'
+fi
+
+exit(0)
