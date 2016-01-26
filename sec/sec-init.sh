@@ -13,10 +13,15 @@ read url
 
 sed -i s#url_here#$url#g aws_api.txt
 
-echo "Type in API key"
+echo "Type in AWS API key"
 read api
 
 sed -i s/api_key_here/$api/g aws_api.txt
+
+echo 'Type in HipChat API key'
+read hipchat
+
+sed -i s/hipchat_key_here/$hipchat/g aws_api.txt
 
 chmod 600 aws_api.txt
 
