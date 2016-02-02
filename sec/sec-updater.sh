@@ -16,12 +16,12 @@ if [[ "$1" == "update" ]]; then
 
     # Download scripts and config files with -N option to overwrite files
     # Use the -P option to set the directory prefix
-    wget -P /root/sec -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/bash/api.sh"
-    chmod 700 /root/sec/api.sh
-    wget -P /root/sec -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/yum.conf"
-    chmod 700 /root/sec/yum.conf
-    wget -P /root/sec -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/sec.conf"
-    chmod 700 /root/sec/sec.conf
+    wget -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/bash/api.sh"
+    chmod 700 ./api.sh
+    wget -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/yum.conf"
+    chmod 700 ./yum.conf
+    wget -N "https://raw.githubusercontent.com/gerardocardenasgomez/admin-scripts/master/sec/sec.conf"
+    chmod 700 ./sec.conf
 
 
     # Exit if user specified not to update sec screen processes
