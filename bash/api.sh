@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-. /root/sec/aws_api.txt
+
+if [[ -e "/root/sec/aws_api.txt" ]] ; then
+    . /root/sec/aws_api.txt
+else
+    . ./aws_api.txt
+fi
 
 temp_file=$(mktemp)
 today=$(date +%Y-%m-%d)
