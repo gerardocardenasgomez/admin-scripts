@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+BASEDIR=$(dirname "$0")
+cd $BASEDIR
+
 if [[ -e "/root/sec/aws_api.txt" ]] ; then
     . /root/sec/aws_api.txt
 else
