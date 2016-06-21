@@ -7,7 +7,7 @@ BASEDIR=$(dirname "$0")
 cd $BASEDIR
 
 # Pick up variables from root, or current directory
-if [[ -e "/root/sec/aws_api.txt" ]] ; then
+if [[ -r "/root/sec/aws_api.txt" ]] ; then
     . /root/sec/aws_api.txt
 else
     . ./aws_api.txt
