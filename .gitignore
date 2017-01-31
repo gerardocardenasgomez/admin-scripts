@@ -1,3 +1,4 @@
 bash/file.txt
 bash/wordlist
 /python/exercises/kivy/main.pyc
+*.pyc
